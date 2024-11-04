@@ -28,13 +28,13 @@ app.use(session({
     secret:'keyboard car',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: { secure: false, maxAge:30000 }
 }));
 app.use(flash());
 
 // Routes
 app.use("/", routes);
-app.use("/db", routesDb)
+app.use("/api/v1", routesDb)
 
 const PORT = process.env.PORT || 3000;
 

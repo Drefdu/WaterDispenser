@@ -1,0 +1,104 @@
+body {
+  background-color: #171717 !important;
+}
+
+
+.dashboard__card {
+  width: 200px;
+  height: 150px;
+  background: rgb(17, 4, 134);
+  border-radius: 5px;
+  box-shadow: rgb(0,0,0,0.7) 5px 10px 50px ,rgb(0,0,0,0.7) -5px 0px 250px;
+  display: flex;
+  color: white;
+  justify-content: center;
+  position: relative;
+  flex-direction: column;
+  background: linear-gradient(to right, rgb(22, 88, 212), rgb(73, 143, 223));
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.dashboard__card:hover {
+  box-shadow: rgb(0,0,0) 5px 10px 50px ,rgb(48, 174, 233) -5px 0px 250px;
+}
+
+.time-text {
+  font-size: 50px;
+  margin-top: 0px;
+  margin-left: 15px;
+  font-weight: 600;
+  /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+}
+
+.time-sub-text {
+  font-size: 15px;
+  margin-left: 5px;
+}
+
+.day-text {
+  font-size: 18px;
+  margin-top: 0px;
+  margin-left: 15px;
+  font-weight: 500;
+  /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+}
+
+.moon {
+  font-size: 20px;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  transition: all 0.3s ease-in-out;
+}
+
+.dashboard__card:hover > .moon {
+  font-size: 23px;
+}
+
+
+.dashboard__simple-card {
+  width: 300px;
+  height: 100px;
+  background-color: #212529;
+  border-radius: 7px;
+  
+  color: #d1c9c9;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  padding: 1.2rem;
+  margin-bottom: 16px;
+  border-bottom: 2px solid rgba(6, 98, 202, 1);
+  transition: all 100ms ease-in;
+}
+
+.dashboard__simple-card:hover {
+  border-bottom: 4px solid rgba(6, 98, 202, 1);
+}
+
+.dashboard__simple-card i {
+  font-size: 1.5rem;
+  background: linear-gradient(to right, rgba(3, 82, 230, 0.8), rgba(6, 98, 202, 0.9));
+  border-radius: 5px;
+  padding: 1rem;
+  margin-right: 1.2rem;
+}
+
+.simple-card__info {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+}
+
+.simple-card__info h4 {
+  font-size: large;
+  font-weight: 700;
+}
+
+.simple-card__info h6 {
+  font-size: small;
+  font-weight: 500;
+}
