@@ -42,7 +42,7 @@ module.exports.obtenerAdminPorCorreo = async (req, res) => {
         const admin = await Admin.findOne({ correo });
         
         if (!admin) {
-            return res.status(404).json({ message: "Administrador no encontrado" });
+            return res.status(203).json({ message: "Administrador no encontrado" });
         }
 
         return res.status(200).json(admin);
@@ -216,3 +216,4 @@ module.exports.obtenerVentasMensuales = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+

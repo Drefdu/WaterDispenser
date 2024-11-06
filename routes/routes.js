@@ -6,11 +6,6 @@ const authenticateJWT = require('../controllers/login-check')
 
 router.get("/", async (req,res)=>{
     const messages = req.flash('error');
-    return res.render("home", { messages: messages });
-});
-
-router.get("/login", async (req,res)=>{
-    const messages = req.flash('error');
     return res.render("login", { messages: messages });
 });
 
