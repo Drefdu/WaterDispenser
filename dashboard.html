@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | WATERHOUSE</title>
+  <link 
+  href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+  rel="stylesheet"  type='text/css'>
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: var(--bs-dark);
+      color: var(--bs-light);
+    }
+    .card, .chart-container {
+      background-color: var(--bs-dark);
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .card:hover, .chart-container:hover {
+      transform: translateY(-5px);
+      transition: transform 0.3s ease;
+    }
+    .icon {
+      color: #0d6efd;
+    }
+    .fade-in {
+      animation: fadeIn 0.6s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <!-- Primera fila -->
+    <div class="row g-4">
+      <div class="col-md-6 fade-in">
+        <div class="card p-3 text-left">
+          <h5>Total</h5>
+          <h2>240k L</h2>
+          <small class="text-success"><i class="icon fa-solid fa-arrow-up-long"></i> 23.2% respecto a ayer</small>
+        </div>
+      </div>
+      <div class="col-md-6 fade-in">
+        <div class="card p-3 text-left">
+          <h5>Total de ventas</h5>
+          <h2>$390k</h2>
+          <small class="text-success"><i class="icon fa-solid fa-arrow-up-long"></i> 23.2% respecto a ayer</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segunda fila -->
+    <div class="row g-4 mt-4">
+      <div class="col-md-6 fade-in">
+        <div class="card p-3 chart-container">
+          <h5>Ventas diarias</h5>
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6 fade-in">
+        <div class="card p-3 chart-container">
+          <h5>Crecimiento de la empresa</h5>
+          <canvas id="doughnutChart"></canvas>
+          <div class="row text-center mt-3">
+            <div class="col">
+              <i class="icon bi bi-cash"></i>
+              <p>2023</p>
+              <small>$500k</small>
+            </div>
+            <div class="col">
+              <i class="icon bi bi-wallet"></i>
+              <p>2022</p>
+              <small>$420k</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tercera fila -->
+    <div class="row g-4 mt-4">
+      <!-- Columna "Operación por sucursal" -->
+      <div class="col-md-4 fade-in">
+        <div class="card p-3 text-left">
+          <h5>Operación por sucursal</h5>
+          <p>390k Total de ventas</p>
+          <h2>240k L</h2>
+          <small>Litros dispensados</small>
+          <hr>
+           <!-- Lista de sucursales con cantidades de litros -->
+           <div class="d-flex justify-content-between mt-3">
+            <span>Plaza Reforma, CDMX</span>
+            <span>50k L</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Plaza Andares, Guadalajara</span>
+            <span>45k L</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Galerías Monterrey</span>
+            <span>40k L</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>La Isla Mérida</span>
+            <span>30k L</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Angelópolis, Puebla</span>
+            <span>25k L</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Plaza Río, Tijuana</span>
+            <span>30k L</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Plaza Las Américas, Cancún</span>
+            <span>20k L</span>
+          </div>
+        </div>
+      
+      </div>
+      <div class="col-md-4 fade-in">
+        <div class="card p-3 text-left">
+          <h5>Balance</h5>
+          <p>Total de balance: $459.10</p>
+          <canvas id="lineChart"></canvas>
+        </div>
+      </div>
+      <div class="col-md-4 fade-in">
+        <div class="card p-3 text-left">
+            <h5>Transacciones</h5>
+            
+          <!-- Lista de ingresos por sucursal -->
+          <div class="d-flex justify-content-between mt-3">
+            <span>Plaza Reforma, CDMX</span>
+            <span>+ $120k</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Plaza Andares, Guadalajara</span>
+            <span>+ $90k</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Galerías Monterrey</span>
+            <span>+ $75k</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>La Isla Mérida</span>
+            <span>+ $60k</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Angelópolis, Puebla</span>
+            <span>+ $45k</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Plaza Río, Tijuana</span>
+            <span>+ $60k</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Plaza Las Américas, Cancún</span>
+            <span>+ $40k</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- Cuarta fila: Menús desplegables y tabla de monedas -->
+  <div class="row g-4 mt-4">
+    <div class="col-md-4 fade-in">
+      <div class="card p-3">
+        <h5>Sucursales</h5>
+        <select class="form-select" aria-label="Seleccionar sucursal">
+          <option selected>Selecciona una sucursal</option>
+          <option value="1">Plaza Reforma, CDMX</option>
+          <option value="2">Plaza Andares, Guadalajara</option>
+          <option value="3">Galerías Monterrey</option>
+          <option value="4">La Isla Mérida</option>
+          <option value="5">Angelópolis, Puebla</option>
+          <option value="6">Plaza Río, Tijuana</option>
+          <option value="7">Plaza Las Américas, Cancún</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-4 fade-in">
+      <div class="card p-3">
+        <h5>Dispensadora</h5>
+        <select class="form-select" aria-label="Seleccionar dispensadora">
+          <option selected>Selecciona la dispensadora</option>
+          <option value="1">Dispensadora 1</option>
+          <option value="3">Dispensadora 3</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-4 fade-in">
+      <div class="card p-3">
+        <h5>Cantidad de Monedas</h5>
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Moneda</th>
+              <th scope="col">Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td>$1</td>
+                <td>50</td>
+            </tr>
+            <tr>
+                <td>$2</td>
+                <td>24</td>
+              </tr>
+            <tr>
+              <td>$5</td>
+              <td>30</td>
+            </tr>
+            <tr>
+              <td>$10</td>
+              <td>45</td>
+            </tr>
+           
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script>
+    // Configuración del gráfico de barras
+    const barChartCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barChartCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+        datasets: [{
+          label: 'Ventas',
+          data: [120, 150, 180, 220, 170, 200, 230],
+          backgroundColor: '#0d6efd',
+        }]
+      },
+      options: {
+        responsive: true,
+      }
+    });
+
+    // Configuración del gráfico circular
+    const doughnutChartCtx = document.getElementById('doughnutChart').getContext('2d');
+    new Chart(doughnutChartCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Crecimiento'],
+        datasets: [{
+          label: 'Crecimiento',
+          data: [76, 24],
+          backgroundColor: ['#0d6efd', '#ccc'],
+        }]
+      },
+      options: {
+        responsive: true,
+      }
+    });
+
+    // Configuración del gráfico de línea
+    const lineChartCtx = document.getElementById('lineChart').getContext('2d');
+    new Chart(lineChartCtx, {
+      type: 'line',
+      data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'],
+        datasets: [{
+          label: 'Balance',
+          data: [100, 200, 300, 400, 500, 600, 700],
+          backgroundColor: 'rgba(13, 110, 253, 0.2)',
+          borderColor: '#0d6efd',
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+</body>
+</html>

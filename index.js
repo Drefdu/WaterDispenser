@@ -34,7 +34,8 @@ app.use(flash());
 
 // Routes
 app.use("/", routes);
-app.use("/api/v1", routesDb)
+// app.use("/api/v1", routesDb);
+app.use("/db", routesDb);
 
 const PORT = process.env.PORT || 3000;
 
