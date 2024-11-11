@@ -187,11 +187,11 @@ module.exports.obtenerVentasDiarias = async (req, res) => {
 module.exports.obtenerVentasSemanales = async (req, res) => {
     try {
         const hoy = new Date();
-        const inicioDeLaSemana = new Date(hoy.setDate(hoy.getDate() - hoy.getDay())); // Domingo
-        const finDeLaSemana = new Date(hoy.setDate(hoy.getDate() + 6)); // Sábado
+        const seisDiasAtras = new Date(hoy);
+        seisDiasAtras.setDate(hoy.getDate() - 6); // Restar 6 días
 
         const ventasSemanales = await Venta.find({
-            fecha: { $gte: inicioDeLaSemana, $lt: finDeLaSemana }
+            fecha: { $gte: seisDiasAtras, $lte: hoy }
         });
 
         return res.status(200).json(ventasSemanales);

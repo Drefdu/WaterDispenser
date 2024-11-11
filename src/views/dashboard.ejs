@@ -12,12 +12,22 @@
   <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
   <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+  <link 
+  href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+  rel="stylesheet"  type='text/css'>
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link
     rel="stylesheet"
     href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css"
     type="text/css"
   />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
   <script src="javascript/mapbox.js"></script>
+  <script src="javascript/dashboard.js"></script>
 
   <style>
     body {
@@ -28,58 +38,366 @@
       height: 100vh;
       width: 100vw;
     }
+
+    h1, h2, h3, h4, h5, h6, p {
+      color: white;
+    }
+
+  </style>
+
+  <style>
+    body {
+      background-color: var(--bs-dark);
+      color: white;
+    }
+    .card, .chart-container {
+      background-color: var(--bs-dark);
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .card:hover, .chart-container:hover {
+      transform: translateY(-5px);
+      transition: transform 0.3s ease;
+    }
+    .icon {
+      color: #0d6efd;
+    }
+    .fade-in {
+      animation: fadeIn 0.6s ease;
+    } 
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 
 </head>
 <body>
-  <div class="container p-5 text-center vh-100">
-    <div class="row">
-      <div class="col mb-4">
-        <div class="dashboard__card">
-          <p class="time-text"><span>1,000</span><span class="time-sub-text">PM</span></p>
-          <p class="day-text">Ganancias</p>
-          <i class="fa-solid fa-dollar-sign moon"></i>
+
+  <nav>
+    <div class="logo">
+        <div class="container-fluid position-relative p-0">
+            <nav class="navbar navbar-expand-lg px-4 px-lg-5 sesión py-lg-0">
+                <a href="" class="navbar-brand p-0">
+                    <h1 class="text-primary"><i class="fas fa-hand-holding-water text-white me-3"></i>WATERHOUSE</h1>
+                    <p>Monitoreo y control de sucursales</p>
+                    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="fa fa-bars"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <div class="navbar-nav ms-auto py-0">
+                            <a href="/dashboard" class="nav-item nav-link active text-white">Dashboard</a>
+                            <a href="/" class="nav-item nav-link">Home</a>
+                            <a href="/" class="nav-item nav-link">Configuración</a>
+                            <!-- <a href="#" class="nav-item nav-link">Registros</a> -->
+                 
+                            <!-- <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Sucursales</a>
+                                <div class="dropdown-menu m-0">
+                                    <a href="#" class="dropdown-item">Ubicaciones</a>
+                                    <a href="#" class="dropdown-item">Dispensadoras</a>
+                                    <a href="#" class="dropdown-item">Monitoreo</a>
+                                    <a href="#" class="dropdown-item">Ganancias</a>
+                                </div>
+                            </div> -->
+                        </div>
+                                            
+                    </div>
+                </nav>
+
+  <div class="container py-4">
+      <!-- Primera fila -->
+      <div class="row g-4">
+        <div class="col-md-6 fade-in">
+          <div class="card p-3 text-left">
+            <h5>Litros Totales:</h5>
+            <h2><%= ventasDiarias[0].cantidadAgua  %> L</h2>
+            <!-- <small class="text-success"><i class="icon fa-solid fa-arrow-up-long"></i> 23.2% respecto a ayer</small> -->
+          </div>
+        </div>
+        <div class="col-md-6 fade-in">
+          <div class="card p-3 text-left">
+            <h5>Ventas Diarias</h5>
+            <h2>$<%= ventasDiarias[0].total  %></h2>
+            <!-- <small class="text-success"><i class="icon fa-solid fa-arrow-up-long"></i> 23.2% respecto a ayer</small> -->
+          </div>
         </div>
       </div>
-      <div class="col mb-4">
-        <div class="dashboard__simple-card">
-          <i class="fa-solid fa-video"></i>
-          <div class="simple-card__info">
-            <h4>54</h4>
-            <h6>Camaras funcionando</h6>
+
+      <!-- Segunda fila -->
+      <div class="row g-4 mt-4">
+        <div class="col-md-6 fade-in">
+          <div class="card p-3 chart-container">
+            <h5>Ventas semanales</h5>
+            <canvas id="barChart"></canvas>
+          </div>
+          <div class="card p-3 mt-3 chart-container">
+            <h5>Mapa de sucursales</h5>
+            <div id="map" style="width: 100%; height: 296px"></div>  
           </div>
         </div>
-        <div class="dashboard__simple-card">
-          <i class="fa-solid fa-video"></i>
-          <div class="simple-card__info">
-            <h4>54</h4>
-            <h6>Camaras funcionando</h6>
+        <div class="col-md-6 fade-in">
+          <div class="card p-3 chart-container">
+            <h5>Crecimiento de la empresa</h5>
+            <canvas id="doughnutChart"></canvas>
+            <div class="row text-center mt-3">
+              <div class="col">
+                <i class="icon bi bi-cash"></i>
+                <p>2023</p>
+                <!-- <small>$500k</small> -->
+              </div>
+              <div class="col">
+                <i class="icon bi bi-wallet"></i>
+                <p>2022</p>
+                <!-- <small>$420k</small> -->
+              </div>
+            </div>
           </div>
         </div>
-        <div class="dashboard__simple-card">
-          <i class="fa-solid fa-video"></i>
-          <div class="simple-card__info">
-            <h4>54</h4>
-            <h6>Camaras funcionando</h6>
+      </div>
+      
+
+      <!-- Tercera fila -->
+      <div class="row g-4 mt-4">
+        <!-- <div class="col-md-4 fade-in">
+          <div class="card p-3 text-left">
+            <h5>Operación por sucursal</h5>
+            <p>390k Total de ventas</p>
+            <h2>240k L</h2>
+            <small>Litros dispensados</small>
+            <hr>
+            <div class="d-flex justify-content-between mt-3">
+              <span>Plaza Reforma, CDMX</span>
+              <span>50k L</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Plaza Andares, Guadalajara</span>
+              <span>45k L</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Galerías Monterrey</span>
+              <span>40k L</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>La Isla Mérida</span>
+              <span>30k L</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Angelópolis, Puebla</span>
+              <span>25k L</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Plaza Río, Tijuana</span>
+              <span>30k L</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Plaza Las Américas, Cancún</span>
+              <span>20k L</span>
+            </div>
           </div>
+        </div> -->
+        <!-- <div class="col-md-4 fade-in">
+          <div class="card p-3 text-left">
+            <h5>Balance</h5>
+            <p>Total de balance: $459.10</p>
+            <canvas id="lineChart"></canvas>
+          </div>
+        </div> -->
+        <!-- <div class="col-md-4 fade-in">
+          <div class="card p-3 text-left">
+              <h5>Transacciones</h5>
+            <div class="d-flex justify-content-between mt-3">
+              <span>Plaza Reforma, CDMX</span>
+              <span>+ $120k</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Plaza Andares, Guadalajara</span>
+              <span>+ $90k</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Galerías Monterrey</span>
+              <span>+ $75k</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>La Isla Mérida</span>
+              <span>+ $60k</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Angelópolis, Puebla</span>
+              <span>+ $45k</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Plaza Río, Tijuana</span>
+              <span>+ $60k</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span>Plaza Las Américas, Cancún</span>
+              <span>+ $40k</span>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    <!-- Cuarta fila: Menús desplegables y tabla de monedas -->
+    <div class="row g-4 mt-4">
+      <!-- Seleccionar Fecha -->
+      <div class="col-md-4 fade-in">
+        <div class="card p-3">
+          <h5>Seleccionar Fecha</h5>
+          <select class="form-select" id="fechaSelect" aria-label="Seleccionar fecha">
+            <option selected>Selecciona una fecha</option>
+            <% let fechas = Array.from(new Set(ventasDiarias.map(venta => new Date(venta.fecha).toLocaleDateString()))); %>
+            <% fechas.forEach(fecha => { %>
+              <option value="<%= fecha %>"><%= fecha %></option>
+            <% }); %>
+          </select>
         </div>
-        <div class="dashboard__simple-card">
-          <i class="fa-solid fa-video"></i>
-          <div class="simple-card__info">
-            <h4>54</h4>
-            <h6>Camaras funcionando</h6>
-          </div>
+      </div>
+    
+      <div class="col-md-8 fade-in">
+        <div class="card p-3">
+          <h5>Cantidad de Monedas</h5>
+          <table class="table table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Moneda</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Ganancias</th>
+              </tr>
+            </thead>
+            <tbody id="tablaVentas">
+              <% let gananciasHoy = ventasDiarias.filter(venta => new Date(venta.fecha).toLocaleDateString() === new Date().toLocaleDateString()); %>
+              <% gananciasHoy.forEach(venta => { %>
+                <tr>
+                  <td>$1</td>
+                  <td><%= venta.moneda1 %></td>
+                  <td><%= venta.moneda1 * 1 %></td>
+                </tr>
+                <tr>
+                  <td>$2</td>
+                  <td><%= venta.moneda2 %></td>
+                  <td><%= venta.moneda2 * 2 %></td>
+                </tr>
+                <tr>
+                  <td>$5</td>
+                  <td><%= venta.moneda5 %></td>
+                  <td><%= venta.moneda5 * 5 %></td>
+                </tr>
+                <tr>
+                  <td>$10</td>
+                  <td><%= venta.moneda10 %></td>
+                  <td><%= venta.moneda10 * 10 %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div id="myPlot" style="width:100%;max-width:700px"></div>
-      </div>
-    </div>
+    
+    <script>
+      document.getElementById('fechaSelect').addEventListener('change', function() {
+        const selectedDate = this.value;
+        const tablaVentas = document.getElementById('tablaVentas');
+        tablaVentas.innerHTML = ''; // Limpiar la tabla antes de agregar nuevas filas
+    
+        const ventasArray = <%- JSON.stringify(ventasDiarias) %>;
+        const filteredVentas = ventasArray.filter(venta => {
+          const ventaFecha = new Date(venta.fecha).toLocaleDateString();
+          return ventaFecha === selectedDate;
+        });
+    
+        filteredVentas.forEach(venta => {
+          const monedas = [
+            { valor: 1, cantidad: venta.moneda1 },
+            { valor: 2, cantidad: venta.moneda2 },
+            { valor: 5, cantidad: venta.moneda5 },
+            { valor: 10, cantidad: venta.moneda10 },
+          ];
+    
+          monedas.forEach(moneda => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>$${moneda.valor}</td>
+              <td>${moneda.cantidad}</td>
+              <td>${moneda.cantidad * moneda.valor}</td>
+            `;
+            tablaVentas.appendChild(row);
+          });
+        });
+      });
+    </script>
+    
+    
   </div>
 
-  <div id="map" style="width: 100%; height: 500px;"></div>  
+
+  <script>
+
+    mapboxgl.accessToken = "pk.eyJ1IjoiZHJlZmR1IiwiYSI6ImNtMzJwN2pqNDFnMHUybXBzdDY4aW1zY2gifQ.3H92wFcI4bc0dmfMot_L4Q";
+
+navigator.geolocation.getCurrentPosition(successLocation, errorLocation, {
+  enableHighAccuracy: true
+});
+
+function successLocation(position) {
+  setupMap([position.coords.longitude, position.coords.latitude]);
+}
+
+function errorLocation() {
+  setupMap([-2.24, 53.48]);
+}
+
+function setupMap(center) {
+  const map = new mapboxgl.Map({
+    container: "map",
+    style: "mapbox://styles/mapbox/streets-v11",
+    center: center,
+    zoom: 12
+  });
+
+  // Fetch locations from Express server and add markers
+  fetch('http://localhost:4000/db/obtenerSucursales')
+    .then(response => response.json())
+    .then(locations => {
+      locations.forEach(location => {
+        // Create a DOM element for the marker
+        const el = document.createElement('div');
+        el.className = 'marker';
+
+        // Create the marker
+        // Crear el marcador y el popup
+        const marker = new mapboxgl.Marker(el)
+        .setLngLat(location.coordinates)
+        .setPopup(new mapboxgl.Popup({ offset: 25 })
+          .setHTML(`
+            <div class="location-card">
+              <h2>${location.name}</h2>
+              <p><strong>Estado:</strong> ${location.funcionando ? "En funcionamiento" : "No funcionando"}</p>
+              <p><strong>Cámaras:</strong></p>
+              <ul>
+                ${location.camaras.map(camara => `
+                  <li>
+                    Cámara ${camara.numero}
+                  </li>
+                  <li>IP: ${camara.ip}</li> 
+                  <li>
+                    Estado: ${camara.estado ? "En línea" : "Fuera de línea"}
+                  </li>
+                  <br>
+                `).join('')}
+              </ul>
+            </div>
+          `))
+        .addTo(map);
+
+      });
+    })
+    .catch(error => console.error('Error fetching locations:', error));
+}
+
+
+  </script>
 
   <script>
     const xArray = [55, 49, 44, 24, 15];
@@ -97,5 +415,47 @@
     
     Plotly.newPlot("myPlot", data, layout);
   </script>
+
+  <script>
+
+    
+    // Configuración del gráfico circular
+    const doughnutChartCtx = document.getElementById('doughnutChart').getContext('2d');
+    new Chart(doughnutChartCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Crecimiento'],
+        datasets: [{
+          label: 'Crecimiento',
+          data: [76, 24],
+          backgroundColor: ['#0d6efd', '#ccc'],
+        }]
+      },
+      options: {
+        responsive: true,
+      }
+    });
+
+    // Configuración del gráfico de línea
+    const lineChartCtx = document.getElementById('lineChart').getContext('2d');
+    new Chart(lineChartCtx, {
+      type: 'line',
+      data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'],
+        datasets: [{
+          label: 'Balance',
+          data: [100, 200, 300, 400, 500, 600, 700],
+          backgroundColor: 'rgba(13, 110, 253, 0.2)',
+          borderColor: '#0d6efd',
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+  
 </body>
 </html>

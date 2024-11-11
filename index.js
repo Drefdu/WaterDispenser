@@ -28,7 +28,7 @@ app.use(session({
     secret:'keyboard car',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, maxAge:30000 }
+    cookie: { secure: false}
 }));
 app.use(flash());
 
