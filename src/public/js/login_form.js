@@ -1,6 +1,5 @@
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
     event.preventDefault(); 
-
     const email = this.email.value; 
     const responseCorreo = await axios.post('http://localhost:4000/db/obtenerAdmin',{
         correo:email

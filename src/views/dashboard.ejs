@@ -112,14 +112,26 @@
         <div class="col-md-6 fade-in">
           <div class="card p-3 text-left">
             <h5>Litros Totales:</h5>
-            <h2><%= ventasDiarias[0].cantidadAgua  %> L</h2>
+            <% let contLitros = 0.0; %>
+            <% ventasDiarias.forEach(venta => { %>
+              <% 
+                contLitros += parseFloat(venta.cantidadAgua);
+              %>
+            <% }); %>
+            <h2><%= contLitros  %> L</h2>
             <!-- <small class="text-success"><i class="icon fa-solid fa-arrow-up-long"></i> 23.2% respecto a ayer</small> -->
           </div>
         </div>
         <div class="col-md-6 fade-in">
           <div class="card p-3 text-left">
             <h5>Ventas Diarias</h5>
-            <h2>$<%= ventasDiarias[0].total  %></h2>
+            <% let contDiario = 0.0; %>
+            <% ventasDiarias.forEach(venta => { %>
+                <% 
+                    contDiario += parseFloat(venta.total);
+                %>
+            <% }); %>
+            <h2>$<%= contDiario  %></h2>
             <!-- <small class="text-success"><i class="icon fa-solid fa-arrow-up-long"></i> 23.2% respecto a ayer</small> -->
           </div>
         </div>
@@ -301,7 +313,7 @@
         const tablaVentas = document.getElementById('tablaVentas');
         tablaVentas.innerHTML = ''; // Limpiar la tabla antes de agregar nuevas filas
     
-        const ventasArray = <%- JSON.stringify(ventasDiarias) %>;
+        const ventasArray = '<%- JSON.stringify(ventasDiarias) %>';
         const filteredVentas = ventasArray.filter(venta => {
           const ventaFecha = new Date(venta.fecha).toLocaleDateString();
           return ventaFecha === selectedDate;

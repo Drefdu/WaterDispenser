@@ -31,7 +31,7 @@ module.exports.registroAdmin = async (req, res) => {
         return res.status(201).json({ message: "Administrador registrado exitosamente", admin: nuevoAdmin });
 
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
 
@@ -45,9 +45,9 @@ module.exports.obtenerAdminPorCorreo = async (req, res) => {
             return res.status(203).json({ message: "Administrador no encontrado" });
         }
 
-        return res.status(200).json(admin);
+        return res.json(admin);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
 
@@ -74,9 +74,9 @@ module.exports.actualizarAdminPorCorreo = async (req, res) => {
             return res.status(404).json({ message: "Administrador no encontrado" });
         }
 
-        return res.status(200).json({ message: "Administrador actualizado exitosamente", admin });
+        return res.json({ message: "Administrador actualizado exitosamente", admin });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
 
@@ -101,7 +101,7 @@ module.exports.registroSucursal = async (req, res) => {
 
         return res.status(201).json({ message: "Sucursal registrada exitosamente", sucursal: nuevaSucursal });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
 
@@ -109,9 +109,9 @@ module.exports.registroSucursal = async (req, res) => {
 module.exports.obtenerSucursales = async (req, res) => {
     try {
         const sucursales = await Sucursal.find();
-        return res.status(200).json(sucursales);
+        return sucursales;
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
 
@@ -129,10 +129,9 @@ module.exports.actualizarEstadoCamara = async (req, res) => {
         if (!sucursal) {
             return res.status(404).json({ message: "Sucursal o cámara no encontrada" });
         }
-
-        return res.status(200).json({ message: "Estado de cámara actualizado", sucursal });
+        return res.json({ message: "Estado de cámara actualizado", sucursal });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
 
@@ -162,7 +161,7 @@ module.exports.registroVenta = async (req, res) => {
 
         return res.status(201).json({ message: "Venta registrada exitosamente", venta: nuevaVenta });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
 
@@ -177,9 +176,9 @@ module.exports.obtenerVentasDiarias = async (req, res) => {
             fecha: { $gte: inicioDelDia, $lt: finDelDia }
         });
 
-        return res.status(200).json(ventasDiarias);
+        return ventasDiarias;
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
 
@@ -194,9 +193,9 @@ module.exports.obtenerVentasSemanales = async (req, res) => {
             fecha: { $gte: seisDiasAtras, $lte: hoy }
         });
 
-        return res.status(200).json(ventasSemanales);
+        return ventasSemanales;
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
 
@@ -211,9 +210,8 @@ module.exports.obtenerVentasMensuales = async (req, res) => {
             fecha: { $gte: inicioDelMes, $lt: finDelMes }
         });
 
-        return res.status(200).json(ventasMensuales);
+        return ventasMensuales;
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.json({ message: error.message });
     }
 };
-
