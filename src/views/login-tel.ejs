@@ -99,7 +99,7 @@
     <div class="form-container" >
         <form class="login-form" action="/db/validarCodigo" method="POST">
             <h1 style="font-size: 150% !important;">Iniciar sesión</h1>
-            <input type="email" placeholder="Correo electrónico" name="correo" value="<%= correo.email %>" required >
+            <input type="email" placeholder="Correo electrónico" name="correo" value="<%= correo.email %>" required hidden>
             <input type="text" placeholder="Codigo" name="codigo" required>
             <button type="submit">Acceder</button>
             <div class="access-issue">

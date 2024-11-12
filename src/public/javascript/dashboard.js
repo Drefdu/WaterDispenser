@@ -1,6 +1,6 @@
 console.log(ventasSemanales)
 async function ventasSemanalesGrafica() {
-  const response = await axios.get('http://localhost:4000/db/obtenerVentasS');
+  const response = await axios.get('https://waterdispenser.onrender.com/db/obtenerVentasS');
   console.log(response.data)
 
   const barrasLabel = response.data.map(item => new Date(item.fecha).toLocaleDateString());

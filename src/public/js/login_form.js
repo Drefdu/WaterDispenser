@@ -1,7 +1,7 @@
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
     event.preventDefault(); 
     const email = this.email.value; 
-    const responseCorreo = await axios.post('http://localhost:4000/db/obtenerAdmin',{
+    const responseCorreo = await axios.post('https://waterdispenser.onrender.com/db/obtenerAdmin',{
         correo:email
     });
     if(responseCorreo.status == 200){
@@ -18,7 +18,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
                 text: 'Se ha enviado un correo a ' + email,
                 confirmButtonText: 'Aceptar'
             });
-            const responseTel = await axios.post(`http://localhost:4000/db/enviar_sms/${email}`,{
+            const responseTel = await axios.post(`https://waterdispenser.onrender.com/db/enviar_sms/${email}`,{
                 telefono:responseCorreo.data.telefono
             });
         } catch (error) {
