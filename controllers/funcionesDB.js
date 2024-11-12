@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const Admin = require('../models/admin');
 const Sucursal = require('../models/sucursales');
 const Venta = require('../models/ventasDiarias'); 
+const axios = require('axios')
 
 // Administrador
 // POST Administrador
@@ -28,7 +29,7 @@ module.exports.registroAdmin = async (req, res) => {
 
         await nuevoAdmin.save();
 
-        return res.status(201).json({ message: "Administrador registrado exitosamente", admin: nuevoAdmin });
+        return res.redirect('/dashboard')
 
     } catch (error) {
         return res.json({ message: error.message });
@@ -40,12 +41,22 @@ module.exports.obtenerAdminPorCorreo = async (req, res) => {
     try {
         const { correo } = req.body;
         const admin = await Admin.findOne({ correo });
-        
         if (!admin) {
             return res.status(203).json({ message: "Administrador no encontrado" });
         }
-
         return res.json(admin);
+    } catch (error) {
+        return res.json({ message: error.message });
+    }
+};
+
+module.exports.obtenerUsuarios = async (req, res) => {
+    try {
+        const usuarios = await Admin.find({ rol: { $ne: 'Administrador' } });
+        if (!usuarios) {
+            return res.status(203).json({ message: "Administrador no encontrado" });
+        }
+        return usuarios;
     } catch (error) {
         return res.json({ message: error.message });
     }
@@ -54,7 +65,8 @@ module.exports.obtenerAdminPorCorreo = async (req, res) => {
 // UPDATE Administrador by Correo
 module.exports.actualizarAdminPorCorreo = async (req, res) => {
     try {
-        const { nombre, apellidos, correo, correoNuevo, rol, telefono } = req.body;
+        const correoAdmin = req.params.correo;
+        const { nombre, apellidos, correoNuevo, rol, telefono, codigo } = req.body;
 
         // Crear un objeto de actualización solo con los campos que tienen valores
         const updateFields = {};
@@ -63,9 +75,10 @@ module.exports.actualizarAdminPorCorreo = async (req, res) => {
         if (rol) updateFields.rol = rol;
         if (telefono) updateFields.telefono = telefono;
         if (correoNuevo) updateFields.correo = correoNuevo;
+        if (codigo) updateFields.codigo = codigo;
 
         const admin = await Admin.findOneAndUpdate(
-            { correo },
+            { correo:correoAdmin },
             updateFields,
             { new: true, runValidators: true } // Devuelve el documento actualizado y valida los campos
         );
@@ -80,6 +93,78 @@ module.exports.actualizarAdminPorCorreo = async (req, res) => {
     }
 };
 
+// Enviar codigo
+module.exports.envioCodigo = async (req, res) => {
+    const correoAdmin = req.params.correo;
+    const url = 'https://rest.clicksend.com/v3/sms/send';
+    const username = process.env.TEL_USER;
+    const password = process.env.TEL_PASS;
+    const { telefono } = req.body;
+    // Aquí asegúrate de que req.body contenga los datos esperados
+    const codigoNuevo = Math.floor(1000 + Math.random() * 9000);
+    const data = {
+        messages: [
+            {
+                body: `Tu codigo de seguridad es ${codigoNuevo}`,
+                to: `+52${telefono}`,
+                from: "{{from}}"
+            }
+        ]
+    };
+
+    axios.post(url, data, {
+        auth: {
+            username: username,
+            password: password
+        }
+    })
+    .then(async response => {
+        const updateFields = {};
+        updateFields.codigo = codigoNuevo;
+
+        const admin = await Admin.findOneAndUpdate(
+            { correo:correoAdmin },
+            updateFields,
+            { new: true, runValidators: true } // Devuelve el documento actualizado y valida los campos
+        );
+        return res.status(200).json({ message: 'SMS enviado exitosamente', data: response.data });
+    })
+    .catch(error => {
+        return res.status(500).json({ message: 'Error al enviar SMS', error: error.message });
+    });
+}
+
+//Validar Codigo
+module.exports.validarAdminPorCodigo = async (req, res) => {
+    try {
+        const { correo, codigo } = req.body;
+
+        // Crear un objeto de actualización solo con los campos que tienen valores
+        const updateFields = {
+            codigo : ""
+        }
+        const adminDatos = await Admin.findOne({ correo });
+        if (!adminDatos) {
+            return res.status(404).json({ message: "Administrador no encontrado" });
+        }
+        if(codigo == adminDatos.codigo){
+            const admin = await Admin.findOneAndUpdate(
+                { correo },
+                updateFields,
+                { new: true, runValidators: true } // Devuelve el documento actualizado y valida los campos
+            );
+            if (!admin) {
+                return res.status(404).json({ message: "Administrador no encontrado" });
+            }
+            return res.redirect('/dashboard')
+        }
+        else{
+            return res.status(404).json({ message: "El codigo es incorrecto" });
+        }
+    } catch (error) {
+        return res.json({ message: error.message });
+    }
+};
 
 // Sucursalees
 // POST Sucursales

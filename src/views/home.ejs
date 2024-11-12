@@ -48,21 +48,9 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarCollapse">
                             <div class="navbar-nav ms-auto py-0">
-                                <a href="index.html" class="nav-item nav-link active">Dashboard</a>
-                                <a href="#" class="nav-item nav-link">Ganancias</a>
-                                <a href="#" class="nav-item nav-link">Registros</a>
-
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle"
-                                        data-bs-toggle="dropdown">Sucursales</a>
-                                    <div class="dropdown-menu m-0">
-                                        <a href="#" class="dropdown-item">Ubicaciones</a>
-                                        <a href="#" class="dropdown-item">Dispensadoras</a>
-                                        <a href="#" class="dropdown-item">Monitoreo</a>
-                                        <a href="#" class="dropdown-item">Ganancias</a>
-                                    </div>
-                                </div>
-                                <a href="#" class="nav-item nav-link">Soporte</a>
+                                <a href="/dashboard" class="nav-item nav-link active">Dashboard</a>
+                                <a href="/home" class="nav-item nav-link">Home</a>
+                                <a href="/config" class="nav-item nav-link">Configuración</a>
                             </div>
 
                             <button
@@ -90,7 +78,6 @@
                                             class="fas fa-hand-holding-water text-white fa-3x"></i></div>
                                     <a href="#" class="h4 mb-3">Calidad del agua</a>
                                     <p class="mb-3">Verifica el estado del agua en cada una de las sucursales.</p>
-                                    <a href="#" class="btn text-secondary">Revisar <i class="fa fa-angle-right"></i></a>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
@@ -99,7 +86,6 @@
                                             class="fas fa-solid fa-clipboard-check text-white fa-3x"></i></div>
                                     <a href="#" class="h4 mb-3">Estado de la maquinaria</a>
                                     <p class="mb-3">Informes del estado de las instalaciones.</p>
-                                    <a href="#" class="btn text-secondary">Revisar <i class="fa fa-angle-right"></i></a>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
@@ -108,7 +94,6 @@
                                     </div>
                                     <a href="#" class="h4 mb-3">Monitoreo</a>
                                     <p class="mb-3">Verifica en tiempo real las cámaras de seguridad.</p>
-                                    <a href="#" class="btn text-secondary">Revisar <i class="fa fa-angle-right"></i></a>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
@@ -118,7 +103,6 @@
                                     <a href="#" class="h4 mb-3">Ingresos</a>
                                     <p class="mb-3">Recuento de las ganancias por moneda y totales en las maquinarias.
                                     </p>
-                                    <a href="#" class="btn text-secondary">Revisar <i class="fa fa-angle-right"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -137,16 +121,16 @@
                                         <i class="fas fa-solid fa-coins fa-3x text-white"></i>
                                     </div>
                                     <h4 class="text-white my-4">Ingresos diarios</h4>
-                                    <% let contDiario = 0.0; %>
-                                    <% ventasDiarias.forEach(venta => { %>
-                                        <% 
-                                            contDiario += parseFloat(venta.total);
-                                        %>
-                                    <% }); %>
-                                    <div class="counter-counting">
-                                        <span class="text-white fs-2 fw-bold" data-toggle="counter-up"><%= contDiario %></span>
-                                        <span class="h1 fw-bold text-white">+</span>
-                                    </div>
+                                    <% let contDiario=0.0; %>
+                                        <% ventasDiarias.forEach(venta=> { %>
+                                            <% contDiario +=parseFloat(venta.total); %>
+                                                <% }); %>
+                                                    <div class="counter-counting">
+                                                        <span class="text-white fs-2 fw-bold" data-toggle="counter-up">
+                                                            <%= contDiario %>
+                                                        </span>
+                                                        <span class="h1 fw-bold text-white">+</span>
+                                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
@@ -154,17 +138,17 @@
                                     <div class="counter-item-icon mx-auto">
                                         <i class="fas fa-solid fa-hand-holding-water fa-3x text-white"></i>
                                     </div>
-                                    <% let contLitros = 0.0; %>
-                                    <% ventasDiarias.forEach(venta => { %>
-                                        <% 
-                                            contLitros += parseFloat(venta.cantidadAgua);
-                                        %>
-                                    <% }); %>
-                                    <h4 class="text-white my-4">Litros dispensados</h4>
-                                    <div class="counter-counting">
-                                        <span class="text-white fs-2 fw-bold" data-toggle="counter-up"><%= contLitros %></span>
-                                        <span class="h1 fw-bold text-white">+</span>
-                                    </div>
+                                    <% let contLitros=0.0; %>
+                                        <% ventasDiarias.forEach(venta=> { %>
+                                            <% contLitros +=parseFloat(venta.cantidadAgua); %>
+                                                <% }); %>
+                                                    <h4 class="text-white my-4">Litros dispensados</h4>
+                                                    <div class="counter-counting">
+                                                        <span class="text-white fs-2 fw-bold" data-toggle="counter-up">
+                                                            <%= contLitros %>
+                                                        </span>
+                                                        <span class="h1 fw-bold text-white">+</span>
+                                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
@@ -172,15 +156,17 @@
                                     <div class="counter-item-icon mx-auto">
                                         <i class="fas fa-solid fa-clipboard-check fa-3x text-white"></i>
                                     </div>
-                                    <% let contSucursalesActivas = 0; %>
-                                    <% sucursales.forEach(sucursal => { %>
-                                        <% if (sucursal.funcionando) { contSucursalesActivas++; } %>
-                                    <% }); %>
-                                    <h4 class="text-white my-4">Maquinarias activas</h4>
-                                    <div class="counter-counting">
-                                        <span class="text-white fs-2 fw-bold" data-toggle="counter-up"><%= contSucursalesActivas %></span>
-                                        <span class="h1 fw-bold text-white">+</span>
-                                    </div>
+                                    <% let contSucursalesActivas=0; %>
+                                        <% sucursales.forEach(sucursal=> { %>
+                                            <% if (sucursal.funcionando) { contSucursalesActivas++; } %>
+                                                <% }); %>
+                                                    <h4 class="text-white my-4">Maquinarias activas</h4>
+                                                    <div class="counter-counting">
+                                                        <span class="text-white fs-2 fw-bold" data-toggle="counter-up">
+                                                            <%= contSucursalesActivas %>
+                                                        </span>
+                                                        <span class="h1 fw-bold text-white">+</span>
+                                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
@@ -189,18 +175,21 @@
                                         <i class="fas fa-solid fa-video fa-3x text-white"></i>
                                     </div>
                                     <h4 class="text-white my-4">Cámaras operando</h4>
-                                    <% let contCamaras = 0; %>
-                                    <% sucursales.forEach(sucursal => { %>
-                                        <% JSON.stringify(sucursal.camaras) %>
-                                        
-                                        <% sucursal.camaras.forEach(camara => { %>
-                                            <% if (camara.estado === "true") { contCamaras++; } %>
-                                        <% }); %>
-                                    <% }); %>
-                                    <div class="counter-counting">
-                                        <span class="text-white fs-2 fw-bold" data-toggle="counter-up"><%= contCamaras %></span>
-                                        <span class="h1 fw-bold text-white">+</span>
-                                    </div>
+                                    <% let contCamaras=0; %>
+                                        <% sucursales.forEach(sucursal=> { %>
+                                            <% JSON.stringify(sucursal.camaras) %>
+
+                                                <% sucursal.camaras.forEach(camara=> { %>
+                                                    <% if (camara.estado==="true" ) { contCamaras++; } %>
+                                                        <% }); %>
+                                                            <% }); %>
+                                                                <div class="counter-counting">
+                                                                    <span class="text-white fs-2 fw-bold"
+                                                                        data-toggle="counter-up">
+                                                                        <%= contCamaras %>
+                                                                    </span>
+                                                                    <span class="h1 fw-bold text-white">+</span>
+                                                                </div>
                                 </div>
                             </div>
                         </div>

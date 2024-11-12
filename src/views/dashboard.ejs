@@ -108,8 +108,8 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
               <div class="navbar-nav ms-auto py-0">
                 <a href="/dashboard" class="nav-item nav-link active text-white">Dashboard</a>
-                <a href="/" class="nav-item nav-link">Home</a>
-                <a href="/" class="nav-item nav-link">Configuración</a>
+                <a href="/home" class="nav-item nav-link">Home</a>
+                <a href="/config" class="nav-item nav-link">Configuración</a>
                 <!-- <a href="#" class="nav-item nav-link">Registros</a> -->
 
                 <!-- <div class="nav-item dropdown">
@@ -183,7 +183,7 @@
                       }
                     });
                   }
-                  document.addEventListener("DOMContentLoaded", function() {
+                  document.addEventListener("DOMContentLoaded", function () {
                     ventasSemanalesGrafica()
                   });
                 </script>
@@ -304,7 +304,7 @@
                 <select class="form-select" id="fechaSelect" aria-label="Seleccionar fecha">
                   <option selected>Selecciona una fecha</option>
                   <% let fechas=Array.from(new Set(ventasMensuales.map(venta=> new
-                    Date(venta.fecha).toLocaleDateString()))); %>
+                    Date(venta.fecha).toISOString().split('T')[0]))); %>
                     <% fechas.forEach(fecha=> { %>
                       <option value="<%= fecha %>">
                         <%= fecha %>
@@ -374,63 +374,46 @@
 
           <script>
             document.getElementById('fechaSelect').addEventListener('change', function () {
-    const selectedDate = this.value; // Fecha seleccionada en formato 'YYYY-MM-DD'
-    const tablaVentas = document.getElementById('tablaVentas');
-    tablaVentas.innerHTML = ''; // Limpiar la tabla antes de agregar nuevas filas
-
-    // Convertir ventasMensuales a un array en JavaScript
-    const ventasArray = JSON.parse('<%- JSON.stringify(ventasMensuales) %>');
-    console.log("Ventas array completo:", ventasArray);
-
-    const filteredVentas = ventasArray.filter(venta => {
-        if (!venta.fecha) {
-            console.warn("Venta sin fecha:", venta);
-            return false; // Excluye ventas sin fecha
-        }
-
-        // Convierte venta.fecha y selectedDate al mismo formato 'YYYY-MM-DD' como cadena
-        const ventaFecha = new Date(venta.fecha).toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
-        
-        console.log("Comparando ventaFecha:", ventaFecha, "con selectedDate:", selectedDate);
-
-        // Devuelve true si las fechas coinciden exactamente
-        return ventaFecha === selectedDate;
-    });
-
-    console.log("Ventas filtradas:", filteredVentas);
-
-    // Si hay ventas filtradas, agrégalas a la tabla
-    if (filteredVentas.length === 0) {
-        console.warn("No se encontraron ventas para la fecha seleccionada:", selectedDate);
-    }
-
-    filteredVentas.forEach(venta => {
-        const monedas = [
-            { valor: 1, cantidad: venta.moneda1 || 0 },
-            { valor: 2, cantidad: venta.moneda2 || 0 },
-            { valor: 5, cantidad: venta.moneda5 || 0 },
-            { valor: 10, cantidad: venta.moneda10 || 0 },
-        ];
-
-        monedas.forEach(moneda => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>$${moneda.valor}</td>
-                <td>${moneda.cantidad}</td>
-                <td>${moneda.cantidad * moneda.valor}</td>
-            `;
-            tablaVentas.appendChild(row);
-        });
-    });
-});
-
+              const selectedDate = this.value; // Fecha seleccionada en formato 'YYYY-MM-DD'
+              const tablaVentas = document.getElementById('tablaVentas');
+              tablaVentas.innerHTML = ''; // Limpiar la tabla antes de agregar nuevas filas
+          
+              // Convertir ventasMensuales a un array en JavaScript
+              const ventasArray = JSON.parse('<%- JSON.stringify(ventasMensuales) %>');
+              const Fecha = new Date(selectedDate).toISOString().split('T')[0]
+              let arrayVentasFiltradas = [];
+              ventasArray.forEach(venta => {
+                const ventaFecha = new Date(venta.fecha).toISOString().split('T')[0];
+                if(ventaFecha == Fecha){
+                  arrayVentasFiltradas.push(venta);
+                }
+              });
+              console.log(arrayVentasFiltradas)
+              // Crear y añadir filas a la tabla para cada venta filtrada
+              arrayVentasFiltradas.forEach(venta => {
+                const monedas = [
+                  { valor: 1, cantidad: venta.moneda1 || 0 },
+                  { valor: 2, cantidad: venta.moneda2 || 0 },
+                  { valor: 5, cantidad: venta.moneda5 || 0 },
+                  { valor: 10, cantidad: venta.moneda10 || 0 },
+                ];
+          
+                monedas.forEach(moneda => {
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                    <td>$${moneda.valor}</td>
+                    <td>${moneda.cantidad}</td>
+                    <td>${moneda.cantidad * moneda.valor}</td>
+                  `;
+                  tablaVentas.appendChild(row);
+                });
+              });
+            });
           </script>
-
         </div>
 
-
         <script>
-
+          const datosSucursal = JSON.parse('<%- JSON.stringify(sucursales) %>');
           mapboxgl.accessToken = "pk.eyJ1IjoiZHJlZmR1IiwiYSI6ImNtMzJwN2pqNDFnMHUybXBzdDY4aW1zY2gifQ.3H92wFcI4bc0dmfMot_L4Q";
 
           navigator.geolocation.getCurrentPosition(successLocation, errorLocation, {
@@ -444,7 +427,6 @@
           function errorLocation() {
             setupMap([-2.24, 53.48]);
           }
-
           function setupMap(center) {
             const map = new mapboxgl.Map({
               container: "map",
@@ -453,47 +435,38 @@
               zoom: 12
             });
 
-            // Fetch locations from Express server and add markers
-            fetch('http://localhost:4000/db/obtenerSucursales')
-              .then(response => response.json())
-              .then(locations => {
-                locations.forEach(location => {
-                  // Create a DOM element for the marker
-                  const el = document.createElement('div');
-                  el.className = 'marker';
+            // Agregar marcadores para cada sucursal del JSON
+            datosSucursal.forEach(location => {
+              // Crear un elemento DOM para el marcador
+              const el = document.createElement('div');
+              el.className = 'marker';
 
-                  // Create the marker
-                  // Crear el marcador y el popup
-                  const marker = new mapboxgl.Marker(el)
-                    .setLngLat(location.coordinates)
-                    .setPopup(new mapboxgl.Popup({ offset: 25 })
-                      .setHTML(`
-            <div class="location-card">
-              <h2>${location.name}</h2>
-              <p><strong>Estado:</strong> ${location.funcionando ? "En funcionamiento" : "No funcionando"}</p>
-              <p><strong>Cámaras:</strong></p>
-              <ul>
-                ${location.camaras.map(camara => `
-                  <li>
-                    Cámara ${camara.numero}
-                  </li>
-                  <li>IP: ${camara.ip}</li> 
-                  <li>
-                    Estado: ${camara.estado ? "En línea" : "Fuera de línea"}
-                  </li>
-                  <br>
-                `).join('')}
-              </ul>
-            </div>
-          `))
-                    .addTo(map);
-
-                });
-              })
-              .catch(error => console.error('Error fetching locations:', error));
+              // Crear el marcador y el popup
+              new mapboxgl.Marker(el)
+                .setLngLat(location.coordinates)
+                .setPopup(new mapboxgl.Popup({ offset: 25 })
+                  .setHTML(`
+                    <div class="location-card">
+                      <h2>${location.name}</h2>
+                      <p><strong>Estado:</strong> ${location.funcionando ? "En funcionamiento" : "No funcionando"}</p>
+                      <p><strong>Cámaras:</strong></p>
+                      <ul>
+                        ${location.camaras.map(camara => `
+                          <li>
+                            Cámara ${camara.numero}
+                          </li>
+                          <li>IP: ${camara.ip}</li> 
+                          <li>
+                            Estado: ${camara.estado ? "En línea" : "Fuera de línea"}
+                          </li>
+                          <br>
+                        `).join('')}
+                      </ul>
+                    </div>
+                  `))
+                .addTo(map);
+            });
           }
-
-
         </script>
 
         <script>

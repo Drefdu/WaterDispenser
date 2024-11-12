@@ -4,7 +4,6 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     const responseCorreo = await axios.post('http://localhost:4000/db/obtenerAdmin',{
         correo:email
     });
-    console.log(responseCorreo.status)
     if(responseCorreo.status == 200){
         try {
             const response = await axios.post('https://login-with.link/api/send-link', {
@@ -18,6 +17,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
                 title: '¡Éxito!',
                 text: 'Se ha enviado un correo a ' + email,
                 confirmButtonText: 'Aceptar'
+            });
+            const responseTel = await axios.post(`http://localhost:4000/db/enviar_sms/${email}`,{
+                telefono:responseCorreo.data.telefono
             });
         } catch (error) {
             Swal.fire({
