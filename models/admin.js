@@ -23,6 +23,9 @@ const AdminSchema = new mongoose.Schema({
         lowercase: true,
         match: [/.+\@.+\..+/, "Por favor ingrese un correo válido"]
     },
+    codigo:{
+        type:String
+    },
     telefono: {
         type: Number,
         required: true,
