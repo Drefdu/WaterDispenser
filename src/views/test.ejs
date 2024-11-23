@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <title>Dashboard</title>
+</head>
+<body>
+  <div id="app">
+    <p>{{ message }}</p>
+
+    <div class="row g-4 mt-4">
+      <!-- Seleccionar Fecha -->
+      <div class="col-md-4 fade-in">
+        <div class="card p-3">
+          <h5>Seleccionar Fecha</h5>
+          <select class="form-select" v-model="daySelected" aria-label="Seleccionar fecha">
+            <option value="" disabled>Selecciona una fecha</option>
+            <option v-for="dia in ventasSemanales" :key="dia.fecha" :value="dia">
+              {{ formatearFecha(dia.fecha) }}
+            </option>
+          </select>
+        </div>
+      </div>
+    
+      <div class="col-md-8 fade-in">
+        <div class="card p-3">
+          <h5>Cantidad de Monedas</h5>
+          <table class="table table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Moneda</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Ganancias</th>
+              </tr>
+            </thead>
+            <tbody id="tablaVentas">
+              <tr>
+                <td>$1</td>
+                <td>{{ daySelected.moneda1 || 'N/A' }}</td>
+                <td>{{ calcularGanancia(daySelected.moneda1, 1) }}</td>
+              </tr>
+              <tr>
+                <td>$2</td>
+                <td>{{ daySelected.moneda2 || 'N/A' }}</td>
+                <td>{{ calcularGanancia(daySelected.moneda2, 2) }}</td>
+              </tr>
+              <tr>
+                <td>$5</td>
+                <td>{{ daySelected.moneda5 || 'N/A' }}</td>
+                <td>{{ calcularGanancia(daySelected.moneda5, 5) }}</td>
+              </tr>
+              <tr>
+                <td>$10</td>
+                <td>{{ daySelected.moneda10 || 'N/A' }}</td>
+                <td>{{ calcularGanancia(daySelected.moneda10, 10) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+    createApp({
+      setup() {
+        const message = ref('Hello vue!');
+        return {
+          message
+        };
+      },
+      data() {
+        return {
+          ventasSemanales: [],
+          daySelected: null
+        };
+      },
+      created() {
+        this.getVentasSemanales(); // Llamada al método al crear la instancia
+      },
+      methods: {
+        getVentasSemanales() {
+          axios.get('/db/obtenerVentasS')
+            .then((response) => {
+              this.ventasSemanales = response.data; // Asignar la respuesta a la propiedad
+            })
+            .catch((error) => {
+              console.error('Error fetching data:', error);
+            });
+        },
+        formatearFecha(fecha) {
+          const date = new Date(fecha);
+          return new Intl.DateTimeFormat('es-ES', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+          }).format(date);
+        },
+        calcularGanancia(cantidad, valorMoneda) {
+          return cantidad ? `$${cantidad * valorMoneda}` : 'N/A';
+        }
+      }
+    }).mount('#app');
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      background-color: var(--bs-dark);
+      color: white;
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
+      color: white;
+    }
+
+    .card, .chart-container {
+      background-color: var(--bs-dark);
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card:hover, .chart-container:hover {
+      transform: translateY(-5px);
+      transition: transform 0.3s ease;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</body>
+</html>

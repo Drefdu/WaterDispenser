@@ -38,6 +38,10 @@ router.get('/home', authenticateJWT, (req, res) => {
     return res.render("home", { user: req.session.user });
 });
 
+router.get('/test', (req, res) => {
+    return res.render("test");
+});
+
 router.get('/config', authenticateJWT, async (req, res) => {
 
     const correo  = req.session.user.email;
